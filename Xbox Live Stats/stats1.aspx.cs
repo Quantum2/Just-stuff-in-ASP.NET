@@ -13,6 +13,7 @@ using System.IO;
 using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Xbox_Live_Stats.Properties;
 
 namespace Xbox_Live_Stats
 {
@@ -46,6 +47,7 @@ namespace Xbox_Live_Stats
             string gamertag = TextBox1.Text;
             string xuid;
             string jsonTemp;
+            System.Drawing.Image back1;
 
             HttpClient client = new HttpClient();
 
@@ -85,6 +87,8 @@ namespace Xbox_Live_Stats
                         Label7.Visible = true;
                         Image1.Visible = true;
                         Image1.ImageUrl = obj.Picture;
+
+                        back1 = Resources.test1;
                     }
                 }
                 else

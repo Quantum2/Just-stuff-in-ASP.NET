@@ -88,7 +88,9 @@ namespace Xbox_Live_Stats
                         Image1.Visible = true;
                         Image1.ImageUrl = obj.Picture;
 
-                        back1 = Resources.test1;
+                        back1 = Resources.test2;
+                        Bitmap myBitmap = new Bitmap(back1);
+                        Graphics gfx = Graphics.FromImage(myBitmap);
                     }
                 }
                 else

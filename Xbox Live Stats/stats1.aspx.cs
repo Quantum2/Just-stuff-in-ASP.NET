@@ -47,7 +47,6 @@ namespace Xbox_Live_Stats
             string gamertag = TextBox1.Text;
             string xuid;
             string jsonTemp;
-            System.Drawing.Image back1;
 
             HttpClient client = new HttpClient();
 
@@ -88,21 +87,25 @@ namespace Xbox_Live_Stats
                         Image1.Visible = true;
                         Image1.ImageUrl = obj.Picture;
 
-                        back1 = Resources.test2;
-                        Bitmap myBitmap = new Bitmap(back1);
-                        Graphics gfx = Graphics.FromImage(myBitmap);
+                        getImage(obj);
                     }
                 }
                 else
                 {
                     Label2.Text = "Error ! Check if the gamertag is correct";
-
                 }
             }
             catch(Exception e1)
             {
                 throw e1;
             }
+        }
+
+        public void getImage(ApiData obj1)
+        {
+            System.Drawing.Image back1 = Resources.test2;
+            Bitmap myBitmap = new Bitmap(back1);
+            Graphics gfx = Graphics.FromImage(myBitmap);
         }
     }
 }

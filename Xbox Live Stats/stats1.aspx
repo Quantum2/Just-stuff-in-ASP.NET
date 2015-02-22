@@ -17,6 +17,8 @@
 </p>
 <p>
     &nbsp;</p>
+    <div class="row">
+        <div class="col-md-4">
 <p>
     <asp:Label ID="Label7" runat="server" Font-Bold="True" Text="Profile Picture: " Visible="False"></asp:Label>
     <asp:Image ID="Image1" runat="server" Height="64px" Visible="False" Width="64px" />
@@ -33,4 +35,9 @@
 <p>
     <asp:Label ID="Label6" runat="server" Font-Bold="True" Visible="False"></asp:Label>
 </p>
+</div>
+        <div class="col-md-4">
+
+            </div>
+    </div>
 </asp:Content>

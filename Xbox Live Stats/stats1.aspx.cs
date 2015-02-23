@@ -14,6 +14,8 @@ using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Net;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Xbox_Live_Stats.Properties;
 
 namespace Xbox_Live_Stats
@@ -21,7 +23,7 @@ namespace Xbox_Live_Stats
     [DataContract]
     public class ApiData
     {
-        [DataMember(Name = "Gamerscore")] 
+        [DataMember(Name = "Gamerscore")]
         public string GS { get; set; }
 
         [DataMember(Name = "GameDisplayPicRaw")]
@@ -34,14 +36,61 @@ namespace Xbox_Live_Stats
         public string rep { get; set; }
     }
 
-    [DataContract]
-    public class ApiData2
+    public class Activity
     {
-        [DataMember(Name = "contentTitle")]
-        public string game_name { get; set; }
-
-        [DataMember(Name = "bingId")]
+        public string startTime { get; set; }
+        public string endTime { get; set; }
+        public int numShares { get; set; }
+        public int numLikes { get; set; }
+        public int numComments { get; set; }
+        public object ugcCaption { get; set; }
+        public string activityItemType { get; set; }
+        public object userXuid { get; set; }
+        public string date { get; set; }
+        public string contentType { get; set; }
+        public int titleId { get; set; }
+        public string platform { get; set; }
+        public string sandboxid { get; set; }
+        public object userKey { get; set; }
+    }
+    public class AuthorInfo
+    {
+        public string name { get; set; }
+        public string secondName { get; set; }
+        public string imageUrl { get; set; }
+        public string authorType { get; set; }
+        public object id { get; set; }
+    }
+    public class RootObject
+    {
+        public string startTime { get; set; }
+        public string endTime { get; set; }
+        public int sessionDurationInMinutes { get; set; }
+        public string contentImageUri { get; set; }
         public string bingId { get; set; }
+        public string contentTitle { get; set; }
+        public string vuiDisplayName { get; set; }
+        public string platform { get; set; }
+        public int titleId { get; set; }
+        public Activity activity { get; set; }
+        public string description { get; set; }
+        public string date { get; set; }
+        public bool hasUgc { get; set; }
+        public string activityItemType { get; set; }
+        public string contentType { get; set; }
+        public string shortDescription { get; set; }
+        public string itemText { get; set; }
+        public string itemImage { get; set; }
+        public string shareRoot { get; set; }
+        public string feedItemId { get; set; }
+        public string itemRoot { get; set; }
+        public bool hasLiked { get; set; }
+        public AuthorInfo authorInfo { get; set; }
+        public string gamertag { get; set; }
+        public string realName { get; set; }
+        public string displayName { get; set; }
+        public string userImageUri { get; set; }
+        public object userXuid { get; set; }
     }
 
     public partial class stats1 : System.Web.UI.Page
@@ -80,26 +129,29 @@ namespace Xbox_Live_Stats
                     Label3.Text = "XUID: " + xuid;
 
                     resp1 = await client.GetAsync("/v2/" + xuid + "/profile");
-
                     jsonTemp = await resp1.Content.ReadAsStringAsync();
 
-                    using (MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(jsonTemp)))
-                    {
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ApiData));
-                        ApiData obj = (ApiData)serializer.ReadObject(stream);
+                    MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(jsonTemp));
+                    DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ApiData));
+                    ApiData obj = (ApiData)serializer.ReadObject(stream);
 
-                        Label4.Visible = true;
-                        Label4.Text = "Gamerscore: " + obj.GS;
-                        Label5.Visible = true;
-                        Label5.Text = "Account tier: " + obj.Tier;
-                        Label6.Visible = true;
-                        Label6.Text = "Reputation: " + obj.rep;
-                        Label7.Visible = true;
-                        Image1.Visible = true;
-                        Image1.ImageUrl = obj.Picture;
+                    resp1 = await client.GetAsync("/v2/" + xuid + "/activity/recent");
+                    jsonTemp = await resp1.Content.ReadAsStringAsync();
 
-                        getImage(obj, xuid, obj2);
-                    }
+                    MemoryStream stream2 = new MemoryStream(Encoding.UTF8.GetBytes(jsonTemp));
+                    RootObject obj2 = (RootObject)serializer2.ReadObject(stream2);
+
+                    Label4.Visible = true;
+                    Label4.Text = "Gamerscore: " + obj.GS;
+                    Label5.Visible = true;
+                    Label5.Text = "Account tier: " + obj.Tier;
+                    Label6.Visible = true;
+                    Label6.Text = "Reputation: " + obj.rep;
+                    Label7.Visible = true;
+                    Image1.Visible = true;
+                    Image1.ImageUrl = obj.Picture;
+
+                    getImage(obj, xuid, obj2);
                 }
                 else
                 {
@@ -112,7 +164,7 @@ namespace Xbox_Live_Stats
             }
         }
 
-        public void getImage(ApiData obj1, string x, ApiData2 obj2)
+        public void getImage(ApiData obj1, string x, RootObject obj2)
         {
             System.Drawing.Image back1 = Resources.test2;
             Bitmap myBitmap = new Bitmap(back1);
@@ -128,7 +180,7 @@ namespace Xbox_Live_Stats
                 Client.DownloadFile(obj1.Picture, "game_pics/" + x + ".png");
             }
 
-            gfx.DrawImage(System.Drawing.Image.FromFile("game_pics/" + x + ".png"),80,20);
+            gfx.DrawImage(System.Drawing.Image.FromFile("game_pics/" + x + ".png"), 80, 20);
             //gfx.DrawString();
             myBitmap.Save("temp.png", ImageFormat.Png);
         }

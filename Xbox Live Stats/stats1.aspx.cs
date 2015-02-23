@@ -13,6 +13,7 @@ using System.IO;
 using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Net;
 using Xbox_Live_Stats.Properties;
 
 namespace Xbox_Live_Stats
@@ -31,6 +32,16 @@ namespace Xbox_Live_Stats
 
         [DataMember(Name = "XboxOneRep")]
         public string rep { get; set; }
+    }
+
+    [DataContract]
+    public class ApiData2
+    {
+        [DataMember(Name = "contentTitle")]
+        public string game_name { get; set; }
+
+        [DataMember(Name = "bingId")]
+        public string bingId { get; set; }
     }
 
     public partial class stats1 : System.Web.UI.Page
@@ -87,7 +98,7 @@ namespace Xbox_Live_Stats
                         Image1.Visible = true;
                         Image1.ImageUrl = obj.Picture;
 
-                        getImage(obj);
+                        getImage(obj, xuid, obj2);
                     }
                 }
                 else
@@ -101,11 +112,25 @@ namespace Xbox_Live_Stats
             }
         }
 
-        public void getImage(ApiData obj1)
+        public void getImage(ApiData obj1, string x, ApiData2 obj2)
         {
             System.Drawing.Image back1 = Resources.test2;
             Bitmap myBitmap = new Bitmap(back1);
             Graphics gfx = Graphics.FromImage(myBitmap);
+
+            using (WebClient Client = new WebClient())
+            {
+                if (!Directory.Exists("game_pics"))
+                {
+                    DirectoryInfo di = Directory.CreateDirectory("game_pics");
+                }
+
+                Client.DownloadFile(obj1.Picture, "game_pics/" + x + ".png");
+            }
+
+            gfx.DrawImage(System.Drawing.Image.FromFile("game_pics/" + x + ".png"),80,20);
+            //gfx.DrawString();
+            myBitmap.Save("temp.png", ImageFormat.Png);
         }
     }
 }

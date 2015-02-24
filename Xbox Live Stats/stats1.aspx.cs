@@ -142,7 +142,7 @@ namespace Xbox_Live_Stats
                     ApiData obj = (ApiData)serializer.ReadObject(stream);
 
                     //Inserir dados na base de dados
-                    SqlCommand myCommand = new SqlCommand("INSERT INTO Gamertags(XUID, Gamertag) " + "Values ('" + xuid + "', '" + gamertag +"')", myConnection);
+                    SqlCommand myCommand = new SqlCommand("IF NOT EXISTS (SELECT XUID FROM Gamertags WHERE XUID = '" + xuid + "') " + "INSERT INTO Gamertags(XUID, Gamertag) " + "Values ('" + xuid + "', '" + gamertag +"')", myConnection);
                     myCommand.ExecuteNonQuery();
 
                     resp1 = await client.GetAsync("/v2/" + xuid + "/activity/recent");

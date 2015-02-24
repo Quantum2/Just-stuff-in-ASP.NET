@@ -16,6 +16,7 @@ using System.Drawing.Imaging;
 using System.Net;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Converters;
 using Xbox_Live_Stats.Properties;
 
 namespace Xbox_Live_Stats
@@ -136,10 +137,9 @@ namespace Xbox_Live_Stats
                     ApiData obj = (ApiData)serializer.ReadObject(stream);
 
                     resp1 = await client.GetAsync("/v2/" + xuid + "/activity/recent");
-                    jsonTemp = await resp1.Content.ReadAsStringAsync();
+                    var jsonTemp2 = await resp1.Content.ReadAsStringAsync();
 
-                    MemoryStream stream2 = new MemoryStream(Encoding.UTF8.GetBytes(jsonTemp));
-                    RootObject obj2 = (RootObject)serializer2.ReadObject(stream2);
+                    var results = JsonConvert.DeserializeObject<List<RootObject>>(jsonTemp2);
 
                     Label4.Visible = true;
                     Label4.Text = "Gamerscore: " + obj.GS;
@@ -151,7 +151,7 @@ namespace Xbox_Live_Stats
                     Image1.Visible = true;
                     Image1.ImageUrl = obj.Picture;
 
-                    getImage(obj, xuid, obj2);
+                    getImage(obj, xuid, gamertag, results);
                 }
                 else
                 {
@@ -164,7 +164,7 @@ namespace Xbox_Live_Stats
             }
         }
 
-        public void getImage(ApiData obj1, string x, RootObject obj2)
+        public void getImage(ApiData obj1, string x, string gamertag, List<RootObject> obj2)
         {
             System.Drawing.Image back1 = Resources.test2;
             Bitmap myBitmap = new Bitmap(back1);
@@ -181,7 +181,16 @@ namespace Xbox_Live_Stats
             }
 
             gfx.DrawImage(System.Drawing.Image.FromFile("game_pics/" + x + ".png"), 80, 20);
-            //gfx.DrawString();
+
+            // Create font and brush.
+            Font drawFont = new Font("Arial", 16);
+            SolidBrush drawBrush = new SolidBrush(Color.Black);
+
+            // Create point for upper-left corner of drawing.
+            PointF drawPoint = new PointF(150.0F, 150.0F);
+
+            gfx.DrawString(gamertag, drawFont, drawBrush, drawPoint);
+
             myBitmap.Save("temp.png", ImageFormat.Png);
         }
     }

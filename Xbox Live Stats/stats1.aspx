@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="stats1.aspx.cs" Inherits="Xbox_Live_Stats.stats1" Async="true" %>
+﻿<%@ Page Title="Xbox Live Stats" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="stats1.aspx.cs" Inherits="Xbox_Live_Stats.stats1" Async="true" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <p>
     <br />

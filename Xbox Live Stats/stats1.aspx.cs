@@ -99,6 +99,7 @@ namespace Xbox_Live_Stats
     public partial class stats1 : System.Web.UI.Page
     {
         public const string api_key = "f59c5c021ae10521d76a09d2351a58ae16f6f582";
+        public const string connection_string = "Server=tcp:a5fb6dp2o2.database.windows.net,1433;Database=Project 1;User ID=quantum2@a5fb6dp2o2;Password=aaabbc123+;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;";
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -112,6 +113,8 @@ namespace Xbox_Live_Stats
             string jsonTemp;
 
             HttpClient client = new HttpClient();
+            SqlConnection myConnection = new SqlConnection(connection_string);
+            myConnection.Open();
 
             client.BaseAddress = new Uri("https://xboxapi.com");
 
@@ -137,6 +140,10 @@ namespace Xbox_Live_Stats
                     MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(jsonTemp));
                     DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(ApiData));
                     ApiData obj = (ApiData)serializer.ReadObject(stream);
+
+                    //Inserir dados na base de dados
+                    SqlCommand myCommand = new SqlCommand("INSERT INTO Gamertags(XUID, Gamertag) " + "Values ('" + xuid + "', '" + gamertag +"')", myConnection);
+                    myCommand.ExecuteNonQuery();
 
                     resp1 = await client.GetAsync("/v2/" + xuid + "/activity/recent");
                     var jsonTemp2 = await resp1.Content.ReadAsStringAsync();

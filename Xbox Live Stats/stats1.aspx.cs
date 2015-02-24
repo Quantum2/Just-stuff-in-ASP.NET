@@ -14,6 +14,8 @@ using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Net;
+using System.Data.Sql;
+using System.Data.SqlClient;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Converters;

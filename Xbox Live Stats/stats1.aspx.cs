@@ -181,15 +181,15 @@ namespace Xbox_Live_Stats
 
             using (WebClient Client = new WebClient())
             {
-                if (!Directory.Exists("game_pics"))
+                if (!Directory.Exists("/game_pics"))
                 {
-                    DirectoryInfo di = Directory.CreateDirectory("game_pics");
+                    DirectoryInfo di = Directory.CreateDirectory("/game_pics");
                 }
 
-                Client.DownloadFile(obj1.Picture, "game_pics/" + x + ".png");
+                Client.DownloadFile(obj1.Picture, "/game_pics" + x + ".png");
             }
 
-            gfx.DrawImage(System.Drawing.Image.FromFile("game_pics/" + x + ".png"), 80, 20);
+            gfx.DrawImage(System.Drawing.Image.FromFile("/game_pics" + x + ".png"), 80, 20);
 
             // Create font and brush.
             Font drawFont = new Font("Arial", 16);
